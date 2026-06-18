@@ -13,48 +13,78 @@ FIXED_VALUES = {
 }
 
 # ----------------------------
-# CAP appearance columns
+# Custom player appearance columns
 # ----------------------------
 
-CAP_COLUMNS = [
+DONOR_COLUMNS = [
     "CAP_Hstl",
     "CAP_Hcol",
+    "CAP_Hlen",
     "CAP_BStyle",
     "CAP_Moust",
     "CAP_Goatee",
     "CAP_Fhcol",
     "CAP_Eyebr",
-
     "CAP_TLftN",
     "CAP_TLftS",
     "CAP_TRgtS",
     "CAP_TLftB",
     "CAP_TRgtB",
     "CAP_TLftF",
-]
-
-# ----------------------------
-# Face/head morph columns
-# (add every morph slider here)
-# ----------------------------
-
-HEAD_COLUMNS = [
+    "CAP_TRgtF",
+    "EyeColor",
+    "HParam1",
+    "HParam2",
     "HdBrwHght",
     "HdBrwWdth",
     "HdBrwSlpd",
-
-    # Add all remaining Hd*
-    # Eye*
-    # Nose*
-    # Chin*
-    # Jaw*
-    # Ear*
-    # Mouth*
-    # Cheek*
-    # etc.
+    "HdNkThck",
+    "HdNkFat",
+    "HdChnLen",
+    "HdChnWdth",
+    "HdChnProt",
+    "HdJawSqr",
+    "HdJawWdth",
+    "HdChkHght",
+    "HdChkWdth",
+    "HdChkFull",
+    "HdDefinit",
+    "MtULCurve",
+    "MtULThick",
+    "MtULProtr",
+    "MtLLCurve",
+    "MtLLThick",
+    "MtLLProtr",
+    "MtSzHght",
+    "MtSzWdth",
+    "MtCrvCorn",
+    "ErHeight",
+    "ErWidth",
+    "ErEarLobe",
+    "ErTilt",
+    "NsNsHght",
+    "NsNsWdth",
+    "NsNsProtr",
+    "NsBnBridge",
+    "NsBnDefin",
+    "NsBnWdth",
+    "NsTipHght",
+    "NsTipWdth",
+    "NsTipTip",
+    "NsTipBnd",
+    "NsNtHght",
+    "NsNtWdth",
+    "EsFrmOpen",
+    "EsFrmSpac",
+    "EsFrmLwEl",
+    "EsFrmUpEl",
+    "EsPlcHght",
+    "EsPlcWdth",
+    "EsPlcRot",
+    "EsPlcProt",
+    "EsShpOtEl",
+    "EsShpInEl",
 ]
-
-DONOR_COLUMNS = CAP_COLUMNS + HEAD_COLUMNS
 
 def check_compatability(pc, donor):
     if len(pc) != len(donor):
@@ -86,6 +116,11 @@ def convert(pc_csv, donor_csv, output_csv):
     donor = pd.read_csv(donor_csv, encoding="utf-16le")
 
     check_compatability(pc, donor)
+
+    # Force names to have no spaces for sake of importing
+    pc['First_Name'] = pc["First_Name"].str.split().str.join('')
+    pc['Last_Name'] = pc["Last_Name"].str.split().str.join('')
+
 
     # Force PS3 values
     for col, value in FIXED_VALUES.items():
