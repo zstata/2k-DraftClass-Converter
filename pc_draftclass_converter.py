@@ -1,5 +1,6 @@
 import pandas as pd
 import argparse
+from pathlib import Path
 
 # ----------------------------
 # Columns that PS3 expects to have fixed values
@@ -121,6 +122,8 @@ def convert(pc_csv, donor_csv, output_csv):
     pc['First_Name'] = pc["First_Name"].str.split().str.join('')
     pc['Last_Name'] = pc["Last_Name"].str.split().str.join('')
 
+    pc["PortrID"] = donor["PortrID"]
+    pc["GenericF"] = donor["GenericF"]
 
     # Force PS3 values
     for col, value in FIXED_VALUES.items():
@@ -147,16 +150,30 @@ def convert(pc_csv, donor_csv, output_csv):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
+    input_dir = Path("csv_database")
+    output_dir = Path("output_database")
+    donor_csv = "BaseDraft.csv"
 
-    parser.add_argument("pc_csv")
-    parser.add_argument("donor_csv")
-    parser.add_argument("output_csv")
+    output_dir.mkdir(exist_ok=True)
 
-    args = parser.parse_args()
+    csv_files = sorted(input_dir.glob("*.csv"))
 
-    convert(
-        args.pc_csv,
-        args.donor_csv,
-        args.output_csv
-    )
+    if not csv_files:
+        print("No CSV files found in csv_database.")
+        exit()
+
+    print(f"Found {len(csv_files)} CSV files.\n")
+
+    for pc_csv in csv_files:
+
+        output_csv = output_dir / f"{pc_csv.stem}_out.csv"
+
+        print(f"Converting {pc_csv.name} -> {output_csv.name}")
+
+        convert(
+            str(pc_csv),
+            donor_csv,
+            str(output_csv)
+        )
+
+    print("\nDone!")
